@@ -11,9 +11,9 @@ exports.ok = function(values, res) {
 
 exports.bad = function(values, res) {
     var data = {
-        'status': 402,
+        'status': 403,
         'data': values
     };
-    res.status(402).json(data);
+    res.status(403).json(data);
     res.end();
   };
