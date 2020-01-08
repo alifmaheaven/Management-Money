@@ -3,15 +3,15 @@
 var express = require('express');
 var router = express.Router();
 
-const todo = require('./../controllers/userControllers');
+const user = require('./../controllers/userControllers');
 const verify = require('./../middleware/verify');
 
 /* GET users listing. */
-// router.get('/', todo.users);
-router.post('/register', todo.createUsers);
-router.post('/login', todo.loginUser);
-router.post('/getuser',verify.verifyToken, todo.getUser);
-router.post('/sendrequestforget', todo.sendRequestForget);
-router.post('/changepassword', todo.changePassword);
+// router.get('/', user.users);
+router.post('/register', user.createUsers);
+router.post('/login', user.loginUser);
+router.post('/getuser',verify.verifyToken, user.getUser);
+router.post('/sendrequestforget', user.sendRequestForget);
+router.post('/changepassword', user.changePassword);
 
 module.exports = router;
