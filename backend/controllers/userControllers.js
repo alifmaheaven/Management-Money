@@ -5,6 +5,10 @@ require('dotenv').config()
 var response = require('./../response/res');
 var connection = require('./../databases/conn');
 
+var mailConfig = require('../config/email');
+var hbs = require('nodemailer-express-handlebars');
+var emailTranport =  mailConfig.EmailTransport
+
 var SCREET_KEY = process.env.SCREET_KEY
 var EXPIRED_TOKEN = process.env.EXPIRED_TOKEN
 
@@ -60,9 +64,9 @@ exports.loginUser = async function(req, res) {
                 userData = result[0]
                 isMatch = await bcrypt.compare( password, userData.password);
                 if (isMatch) {
-                    jwt.sign({userData}, SCREET_KEY,{expiresIn: 60 * EXPIRED_TOKEN},(err, token) => {
+                    jwt.sign({userData}, SCREET_KEY,{expiresIn: EXPIRED_TOKEN},(err, token) => {
                         userData.token = token
-                        userData.expiresIn = 60 * EXPIRED_TOKEN
+                        // userData.expiresIn = 60 * EXPIRED_TOKEN
                         response.ok(userData, res)
                    })
                    return
@@ -72,6 +76,68 @@ exports.loginUser = async function(req, res) {
             }
             response.bad('Username not registered', res)
             return
+        }
+    });
+};
+
+exports.sendRequestForget = async function(req, res) {
+    var email = req.body.email;
+    var url = req.body.url
+    var userData = {}
+    if (email === null || email === undefined) {
+        response.bad("Please insert email!", res)
+        return
+    }
+
+    if (url === null || url === undefined) {
+        response.bad("Please insert url for fogot password!", res)
+        return
+    }
+
+    connection.query('SELECT * FROM users WHERE email = ?',
+    [email,],
+    async function (err, result){
+        if(err){
+            console.log(err)
+            response.bad("Error Database", res)
+            return
+        } else{
+            if (result.length > 0) {
+                userData = result[0]
+                    jwt.sign({userData}, SCREET_KEY,{expiresIn: EXPIRED_TOKEN},(err, token) => {
+                        userData.token = token
+                        mailConfig.ViewOption(emailTranport, hbs)
+                        let HelperOptions = {
+                            from: '"Tariqul islam" <tariqul.islam.rony@gmail.com>',
+                            to: ''+email+'',
+                            subject: 'Change Password',
+                            template: 'email',
+                            context: {
+                              name:"tariqul_islam",
+                              email: ''+email+'',
+                              address: "52, Kadamtola Shubag dhaka",
+                              token : ''+token+'',
+                              url : ''+url+''
+                            }
+                          };
+
+                          emailTranport.sendMail(HelperOptions, (error,info) => {
+                            if(error) {
+                              console.log(error);
+                              response.bad("Email not Send", res)
+                              return
+                            }
+                            console.log(info);
+                            response.ok('Email Send', res)
+                            return
+                          });
+                   })
+                   
+            } else {
+                response.bad('Email not registered', res)
+                return
+            }
+
         }
     });
 };

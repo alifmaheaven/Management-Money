@@ -11,5 +11,6 @@ const verify = require('./../middleware/verify');
 router.post('/register', todo.createUsers);
 router.post('/login', todo.loginUser);
 router.post('/getuser',verify.verifyToken, todo.getUser);
+router.post('/sendrequestforget', todo.sendRequestForget);
 
 module.exports = router;
