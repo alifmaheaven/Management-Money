@@ -5,6 +5,7 @@ var router = express.Router();
 
 const type = require('./../controllers/typeController');
 const category = require('./../controllers/categoryController')
+const journal = require('./../controllers/journalControllers')
 const verify = require('./../middleware/verify');
 
 /* GET users listing. */
@@ -17,6 +18,12 @@ router.get('/category',verify.verifyToken, category.getCategory);
 router.post('/category', verify.verifyToken, category.createCategories);
 router.put('/category', verify.verifyToken, category.updateCategories);
 router.delete('/category', verify.verifyToken, category.deleteCategories);
+
+router.get('/',verify.verifyToken, journal.getJournals );
+// router.post('/', verify.verifyToken, journal.createJournals);
+router.post('/', verify.verifyToken, journal.createJournals);
+// router.put('/category', verify.verifyToken, category.updateCategories);
+// router.delete('/category', verify.verifyToken, category.deleteCategories);
 
 // router.post('/register', todo.createUsers);
 // router.post('/login', todo.loginUser);
