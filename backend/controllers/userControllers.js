@@ -10,7 +10,7 @@ var hbs = require('nodemailer-express-handlebars');
 var emailTranport =  mailConfig.EmailTransport
 
 var SCREET_KEY = process.env.SCREET_KEY
-var EXPIRED_TOKEN = process.env.EXPIRED_TOKEN
+var EXPIRED_TOKEN = process.env.EXPIRED_TOKEN * 60
 
 // agar sepuluh baris maka kita gunakan salt dan pake async ya :)
 const bcrypt = require("bcryptjs");
@@ -67,6 +67,7 @@ exports.loginUser = async function(req, res) {
                     jwt.sign({userData}, SCREET_KEY,{expiresIn: EXPIRED_TOKEN},(err, token) => {
                         userData.token = token
                         // userData.expiresIn = 60 * EXPIRED_TOKEN
+                        console.log(EXPIRED_TOKEN);
                         response.ok(userData, res)
                    })
                    return
@@ -138,6 +139,37 @@ exports.sendRequestForget = async function(req, res) {
                 return
             }
 
+        }
+    });
+};
+
+exports.changePassword = async function(req, res) {
+    var token = req.body.token;
+    var newpassword = req.body.newpassword;
+    var id
+
+    var salt = await bcrypt.genSalt(10);
+    newpassword = await bcrypt.hash(newpassword, salt)
+
+    jwt.verify(token, SCREET_KEY, (err, authData) => {
+        if (err) {
+            console.log(err);
+            response.bad('Token Expired',res);
+            return
+        }
+        id = authData.userData.id
+        return id
+    } )
+
+    connection.query('UPDATE users SET password = ? WHERE id = ?',
+    [newpassword,id],
+    async function (err, result){
+        if(err){
+            console.log(err)
+            response.bad("Error Database", res)
+        } else{
+            response.ok(result, res)
+            return
         }
     });
 };

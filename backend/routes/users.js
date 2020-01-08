@@ -12,5 +12,6 @@ router.post('/register', todo.createUsers);
 router.post('/login', todo.loginUser);
 router.post('/getuser',verify.verifyToken, todo.getUser);
 router.post('/sendrequestforget', todo.sendRequestForget);
+router.post('/changepassword', todo.changePassword);
 
 module.exports = router;
