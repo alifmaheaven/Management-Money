@@ -18,12 +18,16 @@ exports.getJournals = function(req, res) {
 };
 
 exports.createJournals = function(req, res) {
-    var types_id = req.body.types_id
+    var users_id = req.body.users_id
+    var categories_id = req.body.categories_id
     var name = req.body.name;
     var description = req.body.description;
+    var price = req.body.price
+    var nota = req.files.nota[0].path
+    // console.log(nota);
 
-    connection.query('INSERT INTO journals (types_id, name, description) values (?,?,?)',
-    [ types_id, name, description ], 
+    connection.query('INSERT INTO journals( users_id, categories_id, name, description, price, nota) VALUES (?,?,?,?,?,?)',
+    [ users_id, categories_id, name, description, price, nota ], 
     function (error, result){
         if(error){
             console.log(error)

@@ -10,7 +10,7 @@ var port = process.env.PORT || 3000
 var usersRouter = require('./routes/users');
 var journalsRouter = require('./routes/journals');
 
-// var uploadcek = upload.test('public/')
+// var uploadcek = upload.destination('public/')
 
 
 var app = express();

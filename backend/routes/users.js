@@ -5,7 +5,7 @@ var router = express.Router();
 
 //for upload
 var uploadcek = require('./../config/upload')
-var upload = uploadcek.test('uploads/')
+var upload = uploadcek.destination('public')
 
 const user = require('./../controllers/userControllers');
 const verify = require('./../middleware/verify');
