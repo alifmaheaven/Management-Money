@@ -24,15 +24,8 @@ router.put('/category', upload.none(), verify.verifyToken, category.updateCatego
 router.delete('/category', upload.none(), verify.verifyToken, category.deleteCategories);
 
 router.get('/', upload.none(), verify.verifyToken, journal.getJournals );
-// router.post('/', verify.verifyToken, journal.createJournals);
 router.post('/', upload.fields([{ name: 'nota', maxCount: 1 },]), verify.verifyToken, journal.createJournals);
-// router.put('/category', verify.verifyToken, category.updateCategories);
-// router.delete('/category', verify.verifyToken, category.deleteCategories);
-
-// router.post('/register', todo.createUsers);
-// router.post('/login', todo.loginUser);
-// router.post('/getuser',verify.verifyToken, todo.getUser);
-// router.post('/sendrequestforget', todo.sendRequestForget);
-// router.post('/changepassword', todo.changePassword);
+router.put('/', upload.fields([{ name: 'nota', maxCount: 1 },]), verify.verifyToken, journal.updateJournals);
+router.delete('/', upload.none(), verify.verifyToken, journal.deleteJournals);
 
 module.exports = router;
