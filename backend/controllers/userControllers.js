@@ -53,8 +53,8 @@ exports.loginUser = async function(req, res) {
     var isMatch
     var userData = {}
 
-    connection.query('SELECT * FROM users WHERE username = ?',
-    [username,],
+    connection.query('SELECT * FROM users WHERE username = ? OR email = ? ',
+    [username,username],
     async function (err, result){
         if(err){
             console.log(err)
